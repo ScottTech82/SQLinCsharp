@@ -5,14 +5,32 @@ using PrsLibrary.Models;
 Connection connection = new();
 connection.Connect();
 
+UsersController userCtrl = new(connection);
 
 
-VendorsController vendorCtrl = new(connection);
-IEnumerable<Vendor> vendors = vendorCtrl.GetAllVendors();
-foreach(Vendor v in vendors)
+User? u = userCtrl.Login("sa", "sa");
+if(u is not null)
 {
-    Console.WriteLine($"{v.Code} {v.Name}");
+Console.WriteLine($"{u.ID} | {u.Username} | {u.FirstName} | {u.LastName}");
+} else
+{
+    Console.WriteLine("Username or Password is incorrect!");
 }
+
+
+
+//IEnumerable<Product> products = prodCtrl.GetAllProducts();
+//foreach(Product p in products)
+//{
+//    Console.WriteLine($"{p.PartNbr, -15} | {p.Name, -20} | {p.Price, 10:C} | {p.Vendor.Name, -30}");
+//}
+
+//VendorsController vendorCtrl = new(connection);
+//IEnumerable<Vendor> vendors = vendorCtrl.GetAllVendors();
+//foreach(Vendor v in vendors)
+//{
+//    Console.WriteLine($"{v.Code} {v.Name}");
+//}
 
 //Vendor newVendor = new()
 //{
@@ -28,12 +46,12 @@ foreach(Vendor v in vendors)
 //bool ok = vendorCtrl.Insert(newVendor);
 //Console.WriteLine($"The insert was successful! {ok}");
 
-Vendor? X2Xvendor = vendorCtrl.GetVendorByPk(6);
-X2Xvendor.Name = "Xtreme 2 Xtreme";
-X2Xvendor.Address = "11X2X Way";
-X2Xvendor.Phone = "555-555";
-bool updated = vendorCtrl.Update(X2Xvendor);
-Console.WriteLine($"The insert was successful! {updated}");
+//Vendor? X2Xvendor = vendorCtrl.GetVendorByPk(6);
+//X2Xvendor.Name = "Xtreme 2 Xtreme";
+//X2Xvendor.Address = "11X2X Way";
+//X2Xvendor.Phone = "555-555";
+//bool updated = vendorCtrl.Update(X2Xvendor);
+//Console.WriteLine($"The insert was successful! {updated}");
 
 //UsersController userCtrl = new(connection);
 

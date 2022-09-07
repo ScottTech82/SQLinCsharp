@@ -19,7 +19,45 @@ namespace PrsLibrary.Controllers
         connection = conn; //setting conn equal to connection, rather than just listing connection.
 
         }
-        
+
+        public User? Login(string username, string password)
+        {
+            string sql = "SELECT * From Users Where Username = @Username AND Password = @Password;";
+            SqlCommand cmd = new(sql, connection.sqlConnection);
+            cmd.Parameters.AddWithValue("@Username", username);
+            cmd.Parameters.AddWithValue("@Password", password);
+            SqlDataReader reader = cmd.ExecuteReader();
+            if (!reader.HasRows)
+            {
+                reader.Close();
+                return null;
+            }
+            reader.Read();
+            User user = new();
+            user.ID = Convert.ToInt32(reader["ID"]);
+            user.Username = Convert.ToString(reader["Username"])!;
+            user.Password = Convert.ToString(reader["Password"])!;
+            user.FirstName = Convert.ToString(reader["FirstName"])!;
+            user.LastName = Convert.ToString(reader["LastName"])!;
+            if (reader["Phone"] == System.DBNull.Value)
+            {
+                user.Phone = null;
+            }
+            else
+            {
+                user.Phone = Convert.ToString(reader["Phone"]);
+
+            }
+            user.Email = (reader["Email"] == System.DBNull.Value) 
+                ? null 
+                : Convert.ToString(reader["Email"]);
+
+            user.IsReviewer = Convert.ToBoolean(reader["IsReviewer"]);
+            user.IsAdmin = Convert.ToBoolean(reader["IsAdmin"]);
+            reader.Close();
+            return user;
+        }
+
         public IEnumerable<User> GetAllUsers()
         {
             string sql = "SELECT * From Users;";
